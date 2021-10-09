@@ -1,9 +1,50 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
-const { projectsGet } = require("../controllers/projects");
-const { validarCampos } = require("../middlewares");
+const { projectsGet, projectsPut, projectsPost, projectsDelete, projectsPatch } = require("../controllers/projects");
+const { existeProjectPorId, esRoleValido } = require("../helpers/db-validators");
+const { validarCampos, validarJWT, tieneRole } = require("../middlewares");
 
 
 const router = new Router()
 
 router.get('/', projectsGet )
+router.put(
+  "/:id",
+  [
+    validarJWT,
+    check("id", "No es un ID válido").isMongoId(),
+    check("id").custom(existeProjectPorId),
+    validarCampos,
+  ],
+  projectsPut
+);
+
+router.post(
+  "/",
+  [
+    validarJWT,
+    check("nombre", "El nombre es obligatorio").not().isEmpty(),
+
+    check("img", "Imagen es obligatoria").not().isEmpty(),
+    check("website", "website es obligatoria").not().isEmpty(),
+    validarCampos,
+  ],
+  projectsPost
+);
+
+router.delete(
+  "/:id",
+  [
+    validarJWT,
+    // esAdminRole,
+    tieneRole("ADMIN_ROLE"),
+    check("id", "No es un ID válido").isMongoId(),
+    check("id").custom(existeProjectPorId),
+    validarCampos,
+  ],
+  projectsDelete
+);
+
+router.patch("/", projectsPatch);
+
+module.exports = router;

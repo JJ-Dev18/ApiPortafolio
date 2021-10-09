@@ -15,7 +15,7 @@ const ProjectSchema = Schema({
   codigo: String,
   descripcion: String,
   tecnologias: {
-    type: String,
+    type: Array,
     required: [true, "Tecnologias son obligatorias"],
   },
 });
