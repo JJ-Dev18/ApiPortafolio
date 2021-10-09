@@ -34,7 +34,10 @@ const projectsPut = async (req, res = response) => {
 
   const project = await Project.findByIdAndUpdate(id, resto);
 
-  res.json(project);
+  res.json({
+    msg:'changed',
+    project
+  });
 };
 
 const projectsPatch = (req, res = response) => {
