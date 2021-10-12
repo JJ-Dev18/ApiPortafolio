@@ -6,7 +6,6 @@ const ProjectSchema = Schema({
   },
   img: {
     type: String,
-    required: [true, "Imagen es obligatoria"],
   },
   website: {
     type: String,
