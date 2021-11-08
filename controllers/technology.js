@@ -2,6 +2,9 @@ const { response } = require("express");
 
 const Technology = require("../models/technologies");
 
+const cloudinary = require("cloudinary").v2;
+cloudinary.config(process.env.CLOUDINARY_URL);
+
 const techGet = async (req, res = response) => {
   const { limite = 5, desde = 0 } = req.query;
   const [total, techs] = await Promise.all([
@@ -15,9 +18,16 @@ const techGet = async (req, res = response) => {
   });
 };
 const techPost = async (req, res = response) => {
-  const { nombre, img, website, tecnologias } = req.body;
-  const tech = new Technology({ nombre, img, website, tecnologias });
+  const { nombre } = req.body;
+  
+    const { tempFilePath } = req.files.img;
 
+    const { secure_url } = await cloudinary.uploader.upload(tempFilePath, {
+      folder: "Technologies IMG",
+    });
+    // const img = secure_url;
+  const tech = new Technology({ nombre, img:secure_url });
+   
   await tech.save();
 
   res.json({

@@ -12,7 +12,7 @@ const {
   esRoleValido,
   existeTechPorId,
 } = require("../helpers/db-validators");
-const { validarCampos, validarJWT, tieneRole } = require("../middlewares");
+const { validarCampos, validarJWT, tieneRole, validarArchivoSubir } = require("../middlewares");
 
 const router = new Router();
 
@@ -32,8 +32,8 @@ router.post(
   "/",
   [
     validarJWT,
+     validarArchivoSubir,
     check("nombre", "El nombre es obligatorio").not().isEmpty(),
-    check("website", "website es obligatoria").not().isEmpty(),
     validarCampos,
   ],
   techPost

@@ -16,6 +16,7 @@ class Server {
       projects: "/api/projects",
       buscar: "/api/buscar",
       uploads: "/api/uploads",
+      technology: "/api/technologies"
     };
     this.conectarDb()
     this.middlewares();
@@ -50,6 +51,7 @@ class Server {
      this.app.use(this.paths.projects, require('../routes/projects'))
      this.app.use(this.paths.buscar, require('../routes/buscar'))
      this.app.use(this.paths.uploads, require('../routes/uploads'))
+     this.app.use(this.paths.technology, require('../routes/technologies'))
   }
 
   listen(){

@@ -1,6 +1,10 @@
 const { response } = require("express");
 
 const Project = require('../models/projects')
+
+const cloudinary = require("cloudinary").v2;
+cloudinary.config(process.env.CLOUDINARY_URL);
+
 const projectsGet = async (req,res = response) => {
 
   const { limite = 5, desde = 0 } = req.query;  
@@ -17,8 +21,14 @@ const projectsGet = async (req,res = response) => {
   });
 }
 const projectsPost = async (req, res = response) => {
-  const { nombre, img, website , tecnologias } = req.body;
-  const project = new Project({ nombre, img, website, tecnologias });
+  const { nombre, website , tecnologias } = req.body;
+     const { tempFilePath } = req.files.img;
+   const { secure_url } = await cloudinary.uploader.upload(tempFilePath, {
+     folder: "Projects IMG",
+   });
+   // const img = secure_url;
+  
+  const project = new Project({ nombre, img:secure_url, website, tecnologias });
 
   await project.save();
 

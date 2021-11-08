@@ -6,6 +6,7 @@ const Role = require('./role');
 const Server = require('./Server');
 const Usuario = require('./usuario');
 const Project = require('./projects')
+const Technology = require('./technologies')
 
 
 
@@ -16,5 +17,7 @@ module.exports = {
     Project,
     Server,
     Usuario,
+    Technology
+
 }
 

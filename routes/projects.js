@@ -2,7 +2,7 @@ const { Router } = require("express");
 const { check } = require("express-validator");
 const { projectsGet, projectsPut, projectsPost, projectsDelete, projectsPatch } = require("../controllers/projects");
 const { existeProjectPorId, esRoleValido } = require("../helpers/db-validators");
-const { validarCampos, validarJWT, tieneRole } = require("../middlewares");
+const { validarCampos, validarJWT, tieneRole, validarArchivoSubir } = require("../middlewares");
 
 
 const router = new Router()
@@ -23,6 +23,7 @@ router.post(
   "/",
   [
     validarJWT,
+    validarArchivoSubir,
     check("nombre", "El nombre es obligatorio").not().isEmpty(),
     check("website", "website es obligatoria").not().isEmpty(),
     validarCampos,

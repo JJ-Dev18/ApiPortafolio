@@ -5,8 +5,8 @@ const subirArchivo = ( files, extensionesValidas = ['png','jpg','jpeg','gif'], c
 
     return new Promise( (resolve, reject) => {
 
-        const { archivoJuan } = files;
-        const nombreCortado = archivoJuan.name.split('.');
+        const { img } = files;
+        const nombreCortado = img.name.split('.');
         const extension = nombreCortado[ nombreCortado.length - 1 ];
 
         // Validar la extension
@@ -17,7 +17,7 @@ const subirArchivo = ( files, extensionesValidas = ['png','jpg','jpeg','gif'], c
         const nombreTemp = uuidv4() + '.' + extension;
         const uploadPath = path.join( __dirname, '../uploads/', carpeta, nombreTemp );
 
-        archivoJuan.mv(uploadPath, (err) => {
+        img.mv(uploadPath, (err) => {
             if (err) {
                 reject(err);
             }
