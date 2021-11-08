@@ -65,7 +65,7 @@ const projectsDelete = async (req, res = response) => {
   const [public_id] = nombre.split(".");
   cloudinary.uploader.destroy(`Projects IMG/${public_id}`);
 
-  await Project.deleteOne({id});
+  await Project.deleteOne({_id:id});
 
   res.json({
     msg : 'deteled'

@@ -63,7 +63,7 @@ const techDelete = async (req, res = response) => {
 
    cloudinary.uploader.destroy(`Technologies IMG/${public_id}`);
 
-  await Technology.deleteOne({ id });
+  await Technology.deleteOne({ _id: id });
 
   res.json({
     msg:"deleted",
