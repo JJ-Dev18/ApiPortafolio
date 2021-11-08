@@ -1,22 +1,31 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
-const { projectsGet, projectsPut, projectsPost, projectsDelete, projectsPatch } = require("../controllers/projects");
-const { existeProjectPorId, esRoleValido } = require("../helpers/db-validators");
+const {
+  techDelete,
+  techGet,
+  techPath,
+  techPost,
+  techPut
+} = require("../controllers/technology");
+const {
+  
+  esRoleValido,
+  existeTechPorId,
+} = require("../helpers/db-validators");
 const { validarCampos, validarJWT, tieneRole } = require("../middlewares");
 
+const router = new Router();
 
-const router = new Router()
-
-router.get('/', projectsGet )
+router.get("/", techGet);
 router.put(
   "/:id",
   [
     validarJWT,
     check("id", "No es un ID válido").isMongoId(),
-    check("id").custom(existeProjectPorId),
+    check("id").custom(existeTechPorId),
     validarCampos,
   ],
-  projectsPut
+  techPut
 );
 
 router.post(
@@ -27,7 +36,7 @@ router.post(
     check("website", "website es obligatoria").not().isEmpty(),
     validarCampos,
   ],
-  projectsPost
+  techPost
 );
 
 router.delete(
@@ -37,12 +46,12 @@ router.delete(
     // esAdminRole,
     tieneRole("ADMIN_ROLE"),
     check("id", "No es un ID válido").isMongoId(),
-    check("id").custom(existeProjectPorId),
+    check("id").custom(existeTechPorId),
     validarCampos,
   ],
-  projectsDelete
+  techDelete
 );
 
-router.patch("/", projectsPatch);
+router.patch("/", techPath);
 
 module.exports = router;
