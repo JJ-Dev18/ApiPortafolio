@@ -55,16 +55,18 @@ const techPath = (req, res = response) => {
 
 const techDelete = async (req, res = response) => {
   const { id } = req.params;
-  const modelo = Technology.findById(id)
+  const modelo = await Technology.findById(id);
+
    const nombreArr = modelo.img.split("/");
    const nombre = nombreArr[nombreArr.length - 1];
    const [public_id] = nombre.split(".");
-   cloudinary.uploader.destroy(public_id);
-   
+
+   cloudinary.uploader.destroy(`Technologies IMG/${public_id}`);
+
   await Technology.deleteOne({ id });
 
   res.json({
-    msg: "deteled",
+    msg:"deleted",
   });
 };
 

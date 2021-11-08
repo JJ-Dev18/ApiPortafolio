@@ -7,7 +7,7 @@ cloudinary.config( process.env.CLOUDINARY_URL );
 const { response } = require('express');
 const { subirArchivo } = require('../helpers/subir-archivo');
 
-const { Usuario, Project } = require('../models');
+const { Usuario, Project, Technology } = require('../models');
 
 
 const cargarArchivo = async(req, res = response) => {
@@ -87,30 +87,42 @@ const actualizarImagenCloudinary = async(req, res = response ) => {
     const { id, coleccion } = req.params;
 
     let modelo;
+    let folder;
+    switch (coleccion) {
+      case "usuarios":
+        modelo = await Usuario.findById(id);
+        folder = "Usuarios IMG"
+        if (!modelo) {
+          return res.status(400).json({
+            msg: `No existe un usuario con el id ${id}`,
+          });
+        }
 
-    switch ( coleccion ) {
-        case 'usuarios':
-            modelo = await Usuario.findById(id);
-            if ( !modelo ) {
-                return res.status(400).json({
-                    msg: `No existe un usuario con el id ${ id }`
-                });
-            }
-        
         break;
 
-        case 'projects':
-            modelo = await Project.findById(id);
-            if ( !modelo ) {
-                return res.status(400).json({
-                    msg: `No existe un proyecto con el id ${ id }`
-                });
-            }
-        
+      case "projects":
+        modelo = await Project.findById(id);
+        folder = "Projects IMG";
+        if (!modelo) {
+          return res.status(400).json({
+            msg: `No existe un proyecto con el id ${id}`,
+          });
+        }
+
         break;
-    
-        default:
-            return res.status(500).json({ msg: 'Se me olvidó validar esto'});
+      case "technologies":
+        modelo = await Technology.findById(id);
+        folder = "Technologies IMG";
+        if (!modelo) {
+          return res.status(400).json({
+            msg: `No existe un proyecto con el id ${id}`,
+          });
+        }
+
+        break;
+
+      default:
+        return res.status(500).json({ msg: "Se me olvidó validar esto" });
     }
 
 
@@ -125,7 +137,7 @@ const actualizarImagenCloudinary = async(req, res = response ) => {
 
     const { tempFilePath } = req.files.archivoJuan
     const { secure_url } = await cloudinary.uploader.upload(tempFilePath, {
-      folder: "Projects IMG",
+      folder: folder,
     });
     modelo.img = secure_url;
 
