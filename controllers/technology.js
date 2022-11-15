@@ -6,7 +6,7 @@ const cloudinary = require("cloudinary").v2;
 cloudinary.config(process.env.CLOUDINARY_URL);
 
 const techGet = async (req, res = response) => {
-  const { limite = 5, desde = 0 } = req.query;
+  const { limite = 10, desde = 0 } = req.query;
   const [total, techs] = await Promise.all([
     Technology.countDocuments(),
     Technology.find().skip(Number(desde)).limit(Number(limite)),
