@@ -7,7 +7,7 @@ cloudinary.config(process.env.CLOUDINARY_URL);
 
 const projectsGet = async (req,res = response) => {
 
-  const { limite = 5, desde = 0 } = req.query;  
+  const { limite = 10, desde = 0 } = req.query;  
   const [total,projects] = await Promise.all([
     Project.countDocuments(),
     Project.find()
@@ -21,15 +21,24 @@ const projectsGet = async (req,res = response) => {
   });
 }
 const projectsPost = async (req, res = response) => {
-  const { nombre, website , tecnologias } = req.body;
-  console.log("tecnologias", tecnologias)
-     const { tempFilePath } = req.files.img;
-   const { secure_url } = await cloudinary.uploader.upload(tempFilePath, {
+  const { nombre, website ,codigo,descripcion, tecnologias } = req.body;
+  
+  const { tempFilePath : temFileImg } = req.files.img;
+  const { tempFilePath: temFileGif } = req.files.gif;
+
+   const { secure_url: urlImg } = await cloudinary.uploader.upload(temFileImg, {
      folder: "Projects IMG",
    });
-   // const img = secure_url;
+    const { secure_url: urlGif } = await cloudinary.uploader.upload(
+      temFileGif,
+      {
+        folder: "Projects Gif",
+      }
+    );
+   const img = urlImg;
+   const gif = urlGif
   
-  const project = new Project({ nombre, img:secure_url, website ,tecnologias});
+  const project = new Project({ nombre, img,gif, website ,codigo,descripcion,tecnologias});
 
   await project.save();
 

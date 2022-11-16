@@ -21,6 +21,9 @@ const ProjectSchema = Schema({
   img: {
     type: String,
   },
+  gif : {
+    type: String
+  },
   website: {
     type: String,
     required: [true, "website es obligatorio"],
