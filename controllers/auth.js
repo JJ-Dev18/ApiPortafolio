@@ -3,7 +3,7 @@ const bcryptjs = require("bcryptjs");
 
 const Usuario = require("../models/usuario");
 
-const { generarJWT } = require("../helpers/generar-jwt");
+const { generarJWT, comprobarJWT } = require("../helpers/generar-jwt");
 // const { googleVerify } = require("../helpers/google-verify");
 
 const login = async (req, res = response) => {
@@ -46,6 +46,22 @@ const login = async (req, res = response) => {
       msg: "Hable con el administrador",
     });
   }
+};
+
+const comprobarAuth = async (req, res = response) => {
+  const { token } = req.body;
+  const uid = comprobarJWT(token);
+  console.log(uid);
+  if (uid === null) {
+    return res.status(401).json({
+      expirado: true,
+      msg: "Token expirado",
+    });
+  }
+   const usuario = await Usuario.findOne({ uid });
+   res.json({
+     usuario,
+   });
 };
 
 // const googleSignin = async (req, res = response) => {
@@ -93,5 +109,6 @@ const login = async (req, res = response) => {
 
 module.exports = {
   login,
+  comprobarAuth,
   // googleSignin,
 };

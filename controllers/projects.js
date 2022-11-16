@@ -22,13 +22,14 @@ const projectsGet = async (req,res = response) => {
 }
 const projectsPost = async (req, res = response) => {
   const { nombre, website , tecnologias } = req.body;
+  console.log("tecnologias", tecnologias)
      const { tempFilePath } = req.files.img;
    const { secure_url } = await cloudinary.uploader.upload(tempFilePath, {
      folder: "Projects IMG",
    });
    // const img = secure_url;
   
-  const project = new Project({ nombre, img:secure_url, website, tecnologias });
+  const project = new Project({ nombre, img:secure_url, website ,tecnologias});
 
   await project.save();
 
