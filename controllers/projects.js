@@ -7,12 +7,13 @@ cloudinary.config(process.env.CLOUDINARY_URL);
 
 const projectsGet = async (req,res = response) => {
 
-  const { limite = 10, desde = 0 } = req.query;  
-  const [total,projects] = await Promise.all([
+  const { limite = 20, desde = 0 } = req.query;  
+  const [total, projects] = await Promise.all([
     Project.countDocuments(),
     Project.find()
-    .skip(Number(desde))
-    .limit(Number(limite)),
+      .populate("tecnologias")
+      .skip(Number(desde))
+      .limit(Number(limite)),
   ]);
 
   res.json({
