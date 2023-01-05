@@ -1,5 +1,7 @@
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const cloudinary = require("cloudinary").v2;
+cloudinary.config(process.env.CLOUDINARY_URL);
 
 const subirArchivo = ( files, extensionesValidas = ['png','jpg','jpeg','gif'], carpeta = '' ) => {
 
@@ -29,8 +31,25 @@ const subirArchivo = ( files, extensionesValidas = ['png','jpg','jpeg','gif'], c
 
 }
 
+const updateImage = async (img,carpeta,oldImg) => {
+
+     const { tempFilePath: temFileImg } = img;
+      const { secure_url: urlImg } = await cloudinary.uploader.upload(
+        temFileImg,
+        {
+          folder: carpeta,
+        }
+      );
+      const oldImgsplit = oldImg.split("/");
+      const nombreOldImg = oldImgsplit[oldImgsplit.length - 1];
+      const [idOldImg] = nombreOldImg.split(".");
+      cloudinary.uploader.destroy(`${carpeta}/${idOldImg}`);
+     return urlImg;
+}
+
 
 
 module.exports = {
-    subirArchivo
+    subirArchivo,
+    updateImage
 }

@@ -1,4 +1,5 @@
 const { response } = require("express");
+const { updateImage } = require("../helpers/subir-archivo");
 
 const Technology = require("../models/technologies");
 
@@ -11,7 +12,7 @@ const techGet = async (req, res = response) => {
     Technology.countDocuments(),
     Technology.find().skip(Number(desde)).limit(Number(limite)),
   ]);
-  console.log(total)
+  
   res.json({
     total,
     techs,
@@ -37,14 +38,24 @@ const techPost = async (req, res = response) => {
 
 const techPut = async (req, res = response) => {
   const { id } = req.params;
-  const { _id, ...resto } = req.body;
-
-  const tech = await Technology.findByIdAndUpdate(id, resto);
-
-  res.json({
-    msg: "changed",
-    tech,
-  });
+  const { _id, nombre, oldImg } = req.body;
+  if(req.files){
+    const urlImagen = await updateImage(req.files.img,"Technologies IMG",oldImg);
+    const tech = await Technology.findByIdAndUpdate(id, {nombre, img :  urlImagen });
+     res.json({
+       msg: "changed successfully",
+       tech,
+     });
+  }else{
+    const tech = await Technology.findByIdAndUpdate(id, {
+      nombre,
+    });
+     res.json({
+       msg: "changed successfully",
+       tech,
+     });
+  }
+ 
 };
 
 const techPath = (req, res = response) => {
