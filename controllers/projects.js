@@ -13,7 +13,9 @@ const projectsGet = async (req, res = response) => {
     Project.find()
       .populate("tecnologias")
       .skip(Number(desde))
-      .limit(Number(limite)),
+      .limit(Number(limite))
+      .sort({complejidad: 'desc' })
+      ,
   ]);
 
   res.json({
