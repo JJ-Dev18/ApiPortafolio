@@ -7,7 +7,7 @@ const cloudinary = require("cloudinary").v2;
 cloudinary.config(process.env.CLOUDINARY_URL);
 
 const projectsGet = async (req, res = response) => {
-  const { limite = 20, desde = 0 } = req.query;
+  const { limite = 20, desde = 0 } = req.query ;
   const [total, projects] = await Promise.all([
     Project.countDocuments(),
     Project.find()
