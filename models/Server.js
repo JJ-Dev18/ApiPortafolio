@@ -55,7 +55,7 @@ class Server {
   }
 
   listen(){
-    this.app.listen(this.port, ()=> {
+      return  this.app.listen(this.port, ()=> {
        console.log('Servidor corriendo en puerto,', this.port)
     })
   }
