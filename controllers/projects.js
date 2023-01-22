@@ -24,7 +24,7 @@ const projectsGet = async (req, res = response) => {
   });
 };
 const projectsPost = async (req, res = response) => {
-  const { nombre, website, codigo, descripcion, tecnologias } = req.body;
+  const { nombre, website,complejidad, codigo, descripcion, tecnologias } = req.body;
 
   const { tempFilePath: temFileImg } = req.files.img;
   const { tempFilePath: temFileGif } = req.files.gif;
@@ -42,6 +42,7 @@ const projectsPost = async (req, res = response) => {
     nombre,
     img,
     gif,
+    complejidad,
     website,
     codigo,
     descripcion,

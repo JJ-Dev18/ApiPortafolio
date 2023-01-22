@@ -15,6 +15,10 @@ const ProjectSchema = Schema({
     type: String,
     required: [true, "website es obligatorio"],
   },
+  complejidad: {
+    type: String,
+    required : [true, "complejidad obligatorio"]
+  },
   codigo: String,
   descripcion: String,
   tecnologias: [{ type: Schema.Types.ObjectId, ref: "Technology" }],
