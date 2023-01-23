@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
-const { projectsGet, projectsPut, projectsPost, projectsDelete, projectsPatch } = require("../controllers/projects");
+const { projectsGet, projectsPut, projectsPost, projectsDelete, projectsPatch, projectGet } = require("../controllers/projects");
 const { existeProjectPorId, esRoleValido } = require("../helpers/db-validators");
 const { validarCampos, validarJWT, tieneRole, validarArchivoSubir } = require("../middlewares");
 
@@ -8,6 +8,17 @@ const { validarCampos, validarJWT, tieneRole, validarArchivoSubir } = require(".
 const router = new Router()
 
 router.get('/', projectsGet )
+router.get(
+  "/:id",
+  [
+    validarJWT,
+    check("id", "No es un ID válido").isMongoId(),
+    check("id").custom(existeProjectPorId),
+    validarCampos,
+  ],
+  projectGet
+);
+
 router.put(
   "/:id",
   [

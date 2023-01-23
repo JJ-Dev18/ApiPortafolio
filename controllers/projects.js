@@ -23,6 +23,13 @@ const projectsGet = async (req, res = response) => {
     projects,
   });
 };
+const projectGet = async ( req, res= response) => {
+  const { id } = req.params;
+ const project = await Project.findById(id)
+ res.json({
+  project
+ });
+}
 const projectsPost = async (req, res = response) => {
   const { nombre, website,complejidad, codigo, descripcion, tecnologias } = req.body;
 
@@ -59,55 +66,54 @@ const projectsPost = async (req, res = response) => {
 const projectsPut = async (req, res = response) => {
   const { id } = req.params;
   const { _id, oldImg, oldGif, ...resto } = req.body;
-  console.log(req.files, "files");
-  console.log(req.body, "body");
-  if (req.files) {
-    if (req.files.img && !req.files.gif) {
-      const urlImagen = await updateImage(
-        req.files.img,
-        "Projects IMG",
-        oldImg
-      );
-      const project = await Project.findByIdAndUpdate(id, {
-        ...resto,
-        img: urlImagen,
-      });
+
+    if (req.files) {
+      if (req.files.img && !req.files.gif) {
+        const urlImagen = await updateImage(
+          req.files.img,
+          "Projects IMG",
+          oldImg
+        );
+        const project = await Project.findByIdAndUpdate(id, {
+          ...resto,
+          img: urlImagen,
+        });
+        res.json({
+          msg: "changed successfully",
+          project: { ...project._doc, img: urlImagen },
+        });
+      }
+      if (req.files.gif && !req.files.img) {
+        const urlGif = await updateImage(req.files.gif, "Projects Gif", oldGif);
+        const project = await Project.findByIdAndUpdate(id, {
+          ...resto,
+          gif: urlGif,
+        });
+        res.json({
+          msg: "changed successfully",
+          project: { ...project._doc, gif: urlGif },
+        });
+      }
+      if (req.files.img && req.files.gif) {
+        const urlImg = await updateImage(req.files.img, "Projects IMG", oldImg);
+        const urlGif = await updateImage(req.files.gif, "Projects Gif", oldGif);
+        const project = await Project.findByIdAndUpdate(id, {
+          ...resto,
+          img: urlImg,
+          gif: urlGif,
+        });
+        res.json({
+          msg: "changed successfully",
+          project: { ...project._doc, img: urlImg, gif: urlGif },
+        });
+      }
+    } else {
+      const project = await Project.findByIdAndUpdate(id, resto);
       res.json({
         msg: "changed successfully",
-        project: { ...project._doc, img: urlImagen },
+        project,
       });
     }
-    if (req.files.gif && !req.files.img) {
-      const urlGif = await updateImage(req.files.gif, "Projects Gif", oldGif);
-      const project = await Project.findByIdAndUpdate(id, {
-        ...resto,
-        gif: urlGif,
-      });
-      res.json({
-        msg: "changed successfully",
-        project: { ...project._doc, gif: urlGif },
-      });
-    }
-    if(req.files.img && req.files.gif){
-      const urlImg = await updateImage(req.files.img, "Projects IMG", oldImg);
-      const urlGif = await updateImage(req.files.gif, "Projects Gif", oldGif);
-      const project = await Project.findByIdAndUpdate(id, {
-        ...resto,
-        img: urlImg,
-        gif: urlGif,
-      });
-      res.json({
-        msg: "changed successfully",
-        project: { ...project._doc, img: urlImg, gif: urlGif },
-      });
-    }
-  } else {
-    const project = await Project.findByIdAndUpdate(id, resto);
-    res.json({
-      msg: "changed successfully",
-      project,
-    });
-  }
 };
 
 const projectsPatch = (req, res = response) => {
@@ -144,4 +150,5 @@ module.exports = {
   projectsPut,
   projectsDelete,
   projectsPatch,
+  projectGet,
 };

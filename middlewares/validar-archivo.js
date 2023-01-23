@@ -3,7 +3,7 @@ const { response } = require("express")
 
 const validarArchivoSubir = (req, res = response, next ) => {
     
-    console.log(req.files)
+ 
 
     if (
       !req.files ||
