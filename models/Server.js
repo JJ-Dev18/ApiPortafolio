@@ -2,7 +2,7 @@ const express = require("express");
 
 //permitir o no paginas (whitelist) (blacklist) CORS 
 const cors = require("cors");
-const { dbConnection } = require("../Db/config");
+const { dbConnection, dbDisconnection } = require("../Db/config");
 const fileUpload = require("express-fileupload");
 
 class Server {
@@ -20,7 +20,6 @@ class Server {
     };
     this.conectarDb()
     this.middlewares();
-
     this.routes()
 
       
@@ -28,6 +27,9 @@ class Server {
   }
   async conectarDb(){
      await dbConnection()
+  }
+   desconectarDb(){
+     dbDisconnection()
   }
   middlewares(){
     //CORS

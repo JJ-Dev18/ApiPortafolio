@@ -18,6 +18,13 @@ const techGet = async (req, res = response) => {
     techs,
   });
 };
+const TechGetOne = async (req, res = response) => {
+  const { id } = req.params;
+  const tech = await Technology.findById(id);
+  res.json({
+    tech,
+  });
+};
 const techPost = async (req, res = response) => {
   const { nombre } = req.body;
   
@@ -87,4 +94,5 @@ module.exports = {
   techPath,
   techPut,
   techPost,
+  TechGetOne,
 };

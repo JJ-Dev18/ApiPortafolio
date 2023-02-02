@@ -5,7 +5,8 @@ const {
   techGet,
   techPath,
   techPost,
-  techPut
+  techPut,
+  TechGetOne
 } = require("../controllers/technology");
 const {
   
@@ -22,6 +23,17 @@ const {
 const router = new Router();
 
 router.get("/", techGet);
+router.get(
+  "/:id",
+  [
+    validarJWT,
+    check("id", "No es un ID válido").isMongoId(),
+    check("id").custom(existeTechPorId),
+    validarCampos,
+  ],
+  TechGetOne
+);
+
 router.put(
   "/:id",
   [

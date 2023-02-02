@@ -5,9 +5,10 @@ const connectionString = NODE_ENV === 'test'
 ? MONGODB_CNN_TEST
 : MONGODB_CNN
 
+let connection;
 const dbConnection = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_CNN, {
+      await mongoose.connect(process.env.MONGODB_CNN, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       
@@ -21,6 +22,11 @@ const dbConnection = async () => {
   }
 };
 
+const dbDisconnection =  ()=> {
+    mongoose.connection.close()
+}
+
 module.exports = {
   dbConnection,
+  dbDisconnection
 };

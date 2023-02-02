@@ -54,7 +54,7 @@ describe("POST Project", () => {
     expect(response.body.msg).toMatch("No hay token en la petición");
   });
 
-  test("Create a project with a JWT Token expired or invalid", async () => {
+  test("Create a project with a JWT Token expired", async () => {
     const response = await api
       .post("/api/projects")
       .set(
@@ -64,6 +64,20 @@ describe("POST Project", () => {
       .send(modelProjectTest)
       .expect(401);
     expect(response.body.msg).toMatch("Token no válido");
+    expect(response.body.error.msg).toMatch("jwt expired");
+  });
+
+  test("Create a project with a JWT Token invalid", async () => {
+    const response = await api
+      .post("/api/projects")
+      .set(
+        "x-token",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MTY0ZWQzNmU1NGYxZDg1OTE4ZGFiZTEiLCJpYXQiOjE2Njg1NjAyMzUsImV4cCI6MTY2ODU3NDYzNX0.SCMKkd0_VPIXGKdC6cGJXC__d_o0krpt9p5L7FKis"
+      )
+      .send(modelProjectTest)
+      .expect(401);
+    expect(response.body.msg).toMatch("Token no válido");
+    expect(response.body.error.msg).toMatch("Invalid Token");
   });
 
   test("Create project withouth images", async () => {
@@ -157,7 +171,36 @@ describe("Get Projects", () => {
     expect(response.body.projects.length).toBeLessThanOrEqual(4);
   });
   describe("Get Project", () => {
-  
+    test("request a project without JWT token", async () => {
+      const response = await api
+        .get(`/api/projects/${newProject._id}`)
+        .expect(401);
+      expect(response.body.msg).toMatch("No hay token en la petición");
+    });
+
+    test("Get a project with a JWT Token expired", async () => {
+      const response = await api
+        .get(`/api/projects/${newProject._id}`)
+        .set(
+          "x-token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MTY0ZWQzNmU1NGYxZDg1OTE4ZGFiZTEiLCJpYXQiOjE2Njg1NjAyMzUsImV4cCI6MTY2ODU3NDYzNX0.SCMKkd0_VPIXGKdC6cGJXC__d_o0krpt9p5L7FKisGs"
+        )
+        .expect(401);
+      expect(response.body.msg).toMatch("Token no válido");
+      expect(response.body.error.msg).toMatch("jwt expired");
+    });
+
+    test("Get a project with a JWT Token invalid", async () => {
+      const response = await api
+        .get(`/api/projects/${newProject._id}`)
+        .set(
+          "x-token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MTY0ZWQzNmU1NGYxZDg1OTE4ZGFiZTEiLCJpYXQiOjE2Njg1NjAyMzUsImV4cCI6MTY2ODU3NDYzNX0.SCMKkd0_VPIXGKdC6cGJXC__d_o0krpt9p5L7FKis"
+        )
+        .expect(401);
+      expect(response.body.msg).toMatch("Token no válido");
+      expect(response.body.error.msg).toMatch("Invalid Token");
+    });
     test("Get a project with invalid MONGOID ", async () => {
       const resp = await api
         .get("/api/projects/1231231")
@@ -177,13 +220,12 @@ describe("Get Projects", () => {
       );
     });
 
-    test("Get a specific project byID", async () => {
-       console.log(newProject._id,"id")
+    test("Get a specific project byID success", async () => {
+    
       const resp = await api
         .get(`/api/projects/${newProject._id}`)
         .set("x-token", token).expect(200)
       
-      console.log(resp,"resoponse by id")
       expect(resp.body.project).not.toBeNull();
       expect(resp.body.project).toMatchObject(newProject);
     });
@@ -229,7 +271,7 @@ describe("PUT Project ", () => {
     expect(response.body.msg).toMatch("No hay token en la petición");
   });
 
-  test("UPDATED a project with a JWT Token expired or invalid", async () => {
+  test("UPDATED a project with a JWT Token expired ", async () => {
     const response = await api
       .put("/api/projects/63cc84f8365a4df80ffa161c")
       .set(
@@ -239,7 +281,21 @@ describe("PUT Project ", () => {
       .send({ complejidad: 2 })
       .expect(401);
     expect(response.body.msg).toMatch("Token no válido");
+    expect(response.body.error.msg).toMatch("jwt expired");
+
   });
+
+   test("Create a project with a JWT Token invalid", async () => {
+     const response = await api
+       .put("/api/projects/63cc84f8365a4df80ffa161c")
+       .set(
+         "x-token",
+         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MTY0ZWQzNmU1NGYxZDg1OTE4ZGFiZTEiLCJpYXQiOjE2Njg1NjAyMzUsImV4cCI6MTY2ODU3NDYzNX0.SCMKkd0_VPIXGKdC6cGJXC__d_o0krpt9p5L7FKis"
+       )
+       .expect(401);
+     expect(response.body.msg).toMatch("Token no válido");
+     expect(response.body.error.msg).toMatch("Invalid Token");
+   });
    test("UPDATED complexity a project", async () => {
      const resp = await api
        .put(`/api/projects/${newProject._id}`)
@@ -249,9 +305,7 @@ describe("PUT Project ", () => {
        .field("oldImg", oldImg)
        .expect(200);
      
-     console.log(resp.body.project)
      expect(resp.body.msg).toMatch("changed successfully");
-
 
    });
 
@@ -330,7 +384,20 @@ describe("Delete Project", ()=> {
          )
          .expect(401);
           expect(response.body.msg).toMatch("Token no válido");
+          expect(response.body.error.msg).toMatch("jwt expired");
+
      });
+      test("Delete a project with a invalid JWT", async () => {
+        const response = await api
+          .delete(`/api/projects/${newProject._id}`)
+          .set(
+            "x-token",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MTY0ZWQzNmU1NGYxZDg1OTE4ZGFiZTEiLCJpYXQiOjE2Njg1NjAyMzUsImV4cCI6MTY2ODU3NDYzNX0.SCMKkd0_VPIXGKdC6cGJXC__d_o0krpt9p5L7FKisG"
+          )
+          .expect(401);
+        expect(response.body.msg).toMatch("Token no válido");
+        expect(response.body.error.msg).toMatch("Invalid Token");
+      });
       test("Deleted a project with invalid MONGOID ", async () => {
         const resp = await api
           .delete("/api/projects/1231231")
@@ -357,7 +424,7 @@ describe("Delete Project", ()=> {
            .expect(200);
          console.log(resp.body);
           expect(resp.body.msg).toMatch(
-            "deteled"
+            "deleted"
           );
        });
 

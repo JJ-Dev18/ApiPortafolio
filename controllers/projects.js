@@ -140,7 +140,7 @@ const projectsDelete = async (req, res = response) => {
   await Project.deleteOne({ _id: id });
 
   res.json({
-    msg: "deteled",
+    msg: "deleted",
   });
 };
 
