@@ -328,8 +328,7 @@ describe("Delete Technology", () => {
   });
 });
 
-afterAll((done) => {
+afterAll(async () => {
   server.close();
-  mongoose.connection.close();
-  done();
+  await mongoose.connection.close();
 });

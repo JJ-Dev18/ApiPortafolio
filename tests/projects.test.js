@@ -431,8 +431,8 @@ describe("Delete Project", ()=> {
       
 })
 
-afterAll((done) => {
+afterAll(async () => {
   server.close();
-  mongoose.connection.close();
-  done();
+  await  mongoose.connection.close();
+ 
 });

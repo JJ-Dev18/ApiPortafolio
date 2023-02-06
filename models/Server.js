@@ -27,10 +27,9 @@ class Server {
   }
   async conectarDb(){
      await dbConnection()
+
   }
-   desconectarDb(){
-     dbDisconnection()
-  }
+   
   middlewares(){
     //CORS
     this.app.use(cors())

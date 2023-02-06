@@ -5,7 +5,7 @@ const connectionString = NODE_ENV === 'test'
 ? MONGODB_CNN_TEST
 : MONGODB_CNN
 
-let connection;
+
 const dbConnection = async () => {
   try {
       await mongoose.connect(process.env.MONGODB_CNN, {
@@ -14,7 +14,8 @@ const dbConnection = async () => {
       
       
     });
-    console.log("base de datos online");
+    // console.log("base de datos online");
+    
   } catch (error) {
     console.log(error);
     console.log(process.env.MONGODB_CNN);
