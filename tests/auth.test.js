@@ -16,8 +16,6 @@ describe("Login Test", () => {
 
     expect(response.body.errors[0].msg).toMatch("No es un correo valido");
     expect(response.body.errors[0].param).toMatch("correo");
-
-    console.log(response.body);
   });
 
   test("withouth email", async () => {
@@ -30,7 +28,6 @@ describe("Login Test", () => {
     expect(response.body.errors[0].param).toMatch("correo");
     expect(response.body.errors[1].msg).toMatch("No es un correo valido");
     expect(response.body.errors[1].param).toMatch("correo");
-    console.log(response.body);
   });
 
   test("without password", async () => {
@@ -80,7 +77,6 @@ describe("Login Test", () => {
        .send({ correo: "test12@test.com", password: "123456" })
        .expect(200);
 
-       console.log(response.body.token)
        expect(response.body.usuario.estado).toBe(true)
        
        expect(comprobarJWT(response.body.token)).not.toBeNull();

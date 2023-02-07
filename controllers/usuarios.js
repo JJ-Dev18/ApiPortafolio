@@ -18,6 +18,14 @@ const usuariosGet = async (req = request, res = response) => {
   });
 };
 
+const usuarioGet = async (req, res = response) => {
+  const { id } = req.params;
+  const usuario = await Usuario.findById(id);
+  res.json({
+    usuario,
+  });
+};
+
 const usuariosPost = async (req, res = response) => {
   const { nombre, correo, password, rol } = req.body;
   const usuario = new Usuario({ nombre, correo, password, rol });
@@ -59,13 +67,24 @@ const usuariosDelete = async (req, res = response) => {
   const { id } = req.params;
   const usuario = await Usuario.findByIdAndUpdate(id, { estado: false });
 
-  res.json(usuario);
+  res.json({ ...usuario._doc, estado: false });
+};
+
+const usuariosDeleteTest = async (req, res = response) => {
+  const { id } = req.params;
+  await Usuario.deleteOne({ _id: id });
+
+  res.json({
+    msg: "deleted",
+  });
 };
 
 module.exports = {
   usuariosGet,
+  usuarioGet,
   usuariosPost,
   usuariosPut,
   usuariosPatch,
   usuariosDelete,
+  usuariosDeleteTest,
 };

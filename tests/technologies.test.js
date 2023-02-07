@@ -116,7 +116,7 @@ describe("Get Technologies", () => {
     test("Should return up to 4 technologies  ", async () => {
       const response = await api.get("/api/technologies?limite=4").expect(200);
 
-      console.log(response.body)
+      
       expect(response.body.techs.length).toBeLessThanOrEqual(4);
     });
 
@@ -323,7 +323,7 @@ describe("Delete Technology", () => {
       .delete(`/api/technologies/${newTechnology._id}`)
       .set("x-token", token)
       .expect(200);
-    console.log(resp.body);
+    
     expect(resp.body.msg).toMatch("deleted");
   });
 });

@@ -154,7 +154,7 @@ describe("POST Project", () => {
        .expect(200);
 
           expect(resp.body.msg).toMatch(
-            "deteled"
+            "deleted"
           );
   })
 });
@@ -422,7 +422,7 @@ describe("Delete Project", ()=> {
            .delete(`/api/projects/${newProject._id}`)
            .set("x-token", token)
            .expect(200);
-         console.log(resp.body);
+       
           expect(resp.body.msg).toMatch(
             "deleted"
           );

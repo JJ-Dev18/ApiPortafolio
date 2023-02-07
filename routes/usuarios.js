@@ -20,11 +20,22 @@ const {
   usuariosPost,
   usuariosDelete,
   usuariosPatch,
+  usuarioGet,
+  usuariosDeleteTest,
 } = require("../controllers/usuarios");
 
 const router = Router();
 
 router.get("/", usuariosGet);
+router.get(
+  "/:id",
+  [
+    check("id", "No es un ID válido").isMongoId(),
+    check("id").custom(existeUsuarioPorId),
+    validarCampos,
+  ],
+  usuarioGet
+);
 
 router.put(
   "/:id",
@@ -64,6 +75,18 @@ router.delete(
     validarCampos,
   ],
   usuariosDelete
+);
+
+router.delete(
+  "/test/:id",
+  [
+    // esAdminRole,
+    // tieneRole("ADMIN_ROLE", "VENTAR_ROLE", "OTRO_ROLE"),
+    check("id", "No es un ID válido").isMongoId(),
+    check("id").custom(existeUsuarioPorId),
+    validarCampos,
+  ],
+  usuariosDeleteTest
 );
 
 router.patch("/", usuariosPatch);
